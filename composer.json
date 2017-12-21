@@ -1,0 +1,28 @@
+{
+    "name": "vbpupil/payment-card",
+    "description": "Payment Card, supports credit, debit & gift cards",
+    "license": "GPL 3.0",
+    "keywords": [
+        "credit",
+        "debit",
+        "gift card"
+    ],
+    "authors": [
+        {
+            "name": "Dean Haines",
+            "email": "vbpupil@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Vbpupil\\" : "src"
+        }
+    },
+    "require": {
+        "php": ">=5.3",
+        "chippyash/attributes": "^1.0",
+        "chippyash/strong-type": "^3.0",
+        "symfony/var-dumper": "^3.4",
+        "myclabs/php-enum": ">=1.5.2,<2"
+    }
+}
