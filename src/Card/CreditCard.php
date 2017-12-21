@@ -11,6 +11,7 @@ namespace Vbpupil\Card;
 
 
 use Chippyash\Type\Number\FloatType;
+use Chippyash\Type\String\StringType;
 use DateTime;
 use vbpupil\Audit\Audit;
 
@@ -46,16 +47,17 @@ class CreditCard extends PaymentCard
     public function __construct()
     {
         parent::__construct();
-        $this->setCreditLimit(new FloatType(100.00));
+        $this->setCreditLimit(new FloatType(1000.00));
         $this->setApr(new FloatType(20.00));
         $this->setCardCharge(new FloatType(0));
     }
 
     /**
      * @param FloatType $value
+     * @return CreditCard
      * @throws PaymentCardException
      */
-    public function debitAccount(FloatType $value)
+    public function debitAccount(FloatType $value, DateTime $date)
     {
         if (($this->creditLimit->get() - $this->balance->get()) - $value->get() < 0) {
             $this->setAudit(array('msg' => Audit::AUDIT_MSG[__FUNCTION__ . 'Fail'], 'value' => $value->get()));
@@ -64,19 +66,21 @@ class CreditCard extends PaymentCard
 
         $this->balance = new FloatType(($this->balance->get() - $value->get()));
 
-        $this->creditTracker(__FUNCTION__, $value->get());
+        $this->creditTracker(__FUNCTION__, $value->get(), $date);
 
         $this->setAudit(array('msg' => Audit::AUDIT_MSG[__FUNCTION__], 'value' => $value->get()));
         $this->getBalance();
+
+        return $this;
     }
 
     /**
      * @param FloatType $value
      * @return $this|PaymentCard
      */
-    public function creditAccount(FloatType $value)
+    public function creditAccount(FloatType $value, DateTime $date)
     {
-        $this->creditTracker(__FUNCTION__, $value->get());
+        $this->creditTracker(__FUNCTION__, $value->get(), $date);
         parent::creditAccount($value);
 
         return $this;
@@ -88,14 +92,14 @@ class CreditCard extends PaymentCard
      * @param $action
      * @param $value
      */
-    protected function creditTracker($action, $value)
+    protected function creditTracker($action, $value, DateTime $date)
     {
         switch ($action){
             case 'debitAccount':
-                $this->creditTrack['debit'][] = array('date'=>new DateTime('now'), 'value'=> $value);
+                $this->creditTrack['debit'][] = array('date'=>$date, 'value'=> $value);
                 break;
             case 'creditAccount':
-                $this->creditTrack['credit'][] = array('date'=>new DateTime('now'), 'value'=> $value);
+                $this->creditTrack['credit'][] = array('date'=>$date, 'value'=> $value);
                 break;
         }
     }
