@@ -3,7 +3,7 @@
  * CreditCard Class
  *
  * @author    Dean Haines
- * @copyright Freetimers Communications Ltd, 2017, UK
+ * @copyright Dean Haines, 2017, UK
  * @license   Proprietary See LICENSE.md
  */
 
