@@ -21,11 +21,15 @@ $card
 ->setOwner(new StringType('Mr D Haines'))
 ->setValidDate(new DateTime('1/12/17', new DateTimeZone('Europe/London')))
 ->setExpDate(new DateTime('01/12/18', new DateTimeZone('Europe/London')))
+
 ->creditAccount(new FloatType(10.00), new DateTime('now'))
 ->creditAccount(new FloatType(15.00), new DateTime('now'))
-->debitAccount(new FloatType(10.00), new DateTime('2017-01-24'))
-->debitAccount(new FloatType(80.00), new DateTime('2017-08-24'))
-->debitAccount(new FloatType(1.00), new DateTime('now'));
+
+->debitAccount(new FloatType(10.00), new DateTime('2017-09-02'))
+->debitAccount(new FloatType(80.00), new DateTime('2016-08-24'))
+->debitAccount(new FloatType(1.00), new DateTime('now'))
+
+->calculateInterest();
 
 dump($card);
 

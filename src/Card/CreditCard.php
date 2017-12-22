@@ -34,12 +34,14 @@ class CreditCard extends PaymentCard
     /**
      * @var
      */
-    protected $creditTrack;
+    public $creditTrack;
 
     /**
      * @var
      */
     protected $apr;
+
+    protected $creditBill;
 
     /**
      * CreditCard constructor.
@@ -94,12 +96,12 @@ class CreditCard extends PaymentCard
      */
     protected function creditTracker($action, $value, DateTime $date)
     {
-        switch ($action){
+        switch ($action) {
             case 'debitAccount':
-                $this->creditTrack['debit'][] = array('date'=>$date, 'value'=> $value);
+                $this->creditTrack['debit'][] = array('date' => $date, 'value' => $value, 'loanTime' => $date->diff(new DateTime('now')));
                 break;
             case 'creditAccount':
-                $this->creditTrack['credit'][] = array('date'=>$date, 'value'=> $value);
+                $this->creditTrack['credit'][] = array('date' => $date, 'value' => $value);
                 break;
         }
     }
@@ -110,13 +112,42 @@ class CreditCard extends PaymentCard
      */
     public function calculateInterest()
     {
-
+        $this->calculate();
     }
+
+    private function calculate()
+    {
+        $paidIn = 0;
+        $paidOut = array();
+
+        //GET A TOTAL FOR WHATS BEEN PAID IN
+        foreach ($this->creditTrack['credit'] AS $d) {
+            $paidIn += $d['value'];
+        }
+
+        //SORT DEBIT INTO DATE ORDER
+        usort($this->creditTrack['debit'],function($a, $b){
+            if ($a['date']->date == $b['date']->date) {
+                return 0;
+            }
+            return ($a['date']->date < $b['date']->date) ? -1 : 1 ;
+
+        });
+
+
+//        foreach ($this->creditTrack['debit'] as $d){
+//            $paidOut['noOfDays'] = $d['date']->date->diff('now');
+//        }
+
+        $this->creditBill = $this->creditTrack['debit'];
+    }
+
 
     /**
      * @return mixed
      */
-    public function getCreditLimit()
+    public
+    function getCreditLimit()
     {
         return $this->creditLimit;
     }
@@ -125,7 +156,8 @@ class CreditCard extends PaymentCard
      * @param FloatType $value
      * @return $this
      */
-    public function setCreditLimit(FloatType $value)
+    public
+    function setCreditLimit(FloatType $value)
     {
         $this->setAudit(array('msg' => 'Account credited', 'value' => $value->get()));
         $this->creditLimit = $value;
@@ -135,7 +167,8 @@ class CreditCard extends PaymentCard
     /**
      * @return int
      */
-    public function getApr()
+    public
+    function getApr()
     {
         return $this->apr;
     }
@@ -144,7 +177,8 @@ class CreditCard extends PaymentCard
      * @param FloatType $apr
      * @return CreditCard
      */
-    public function setApr(FloatType $apr)
+    public
+    function setApr(FloatType $apr)
     {
         $this->apr = $apr;
         return $this;
@@ -154,7 +188,8 @@ class CreditCard extends PaymentCard
     /**
      * @return string
      */
-    public function getCreditLimitToString()
+    public
+    function getCreditLimitToString()
     {
         return "Your current Limit is {$this->creditLimit->get()}";
     }
@@ -162,7 +197,8 @@ class CreditCard extends PaymentCard
     /**
      * @return string
      */
-    public function toString()
+    public
+    function toString()
     {
         $response = "Valid date is {$this->getValidDate()->format('d-m-Y')}<br/>";
         $response .= "Expiry date is {$this->getExpDate()->format('d-m-Y')}<br />";
@@ -175,7 +211,8 @@ class CreditCard extends PaymentCard
     /**
      * @return mixed
      */
-    public function getCardCharge()
+    public
+    function getCardCharge()
     {
         return $this->cardCharge->get();
     }
@@ -186,7 +223,8 @@ class CreditCard extends PaymentCard
      *
      * @param FloatType $cardCharge
      */
-    public function setCardCharge(FloatType $cardCharge)
+    public
+    function setCardCharge(FloatType $cardCharge)
     {
         $this->cardCharge = $cardCharge;
     }
