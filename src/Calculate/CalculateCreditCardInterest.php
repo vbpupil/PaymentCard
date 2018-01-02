@@ -11,7 +11,7 @@ namespace vbpupil\Calculate;
 use DateTime;
 use Vbpupil\Calculate\PaymentCardInterestInterface;
 
-class CalculateCreditCardPaymentCardInterest implements PaymentCardInterestInterface
+class CalculateCreditCardInterest implements PaymentCardInterestInterface
 {
 
     protected $totalInterestChargedForTheMonth = 0;

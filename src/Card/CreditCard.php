@@ -14,7 +14,7 @@ use Chippyash\Type\Number\FloatType;
 use Chippyash\Type\String\StringType;
 use DateTime;
 use vbpupil\Audit\Audit;
-use Vbpupil\Calculate\CalculateCreditCardPaymentCardInterest;
+use Vbpupil\Calculate\CalculateCreditCardInterest;
 use vbpupil\Calculate\PaymentCardInterestInterface;
 
 /**
