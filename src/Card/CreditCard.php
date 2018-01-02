@@ -98,7 +98,7 @@ class CreditCard extends PaymentCard
     {
         switch ($action) {
             case 'debitAccount':
-                $this->creditTrack['debit'][] = array('date' => $date, 'value' => $value, 'loanTime' => $date->diff(new DateTime('now')));
+                $this->creditTrack['debit'][] = array('date' => $date, 'value' => $value);
                 break;
             case 'creditAccount':
                 $this->creditTrack['credit'][] = array('date' => $date, 'value' => $value);
@@ -119,6 +119,7 @@ class CreditCard extends PaymentCard
     {
         $paidIn = 0;
         $paidOut = array();
+        $counter = 0;
 
         //GET A TOTAL FOR WHATS BEEN PAID IN
         foreach ($this->creditTrack['credit'] AS $d) {
@@ -135,11 +136,14 @@ class CreditCard extends PaymentCard
         });
 
 
-//        foreach ($this->creditTrack['debit'] as $d){
-//            $paidOut['noOfDays'] = $d['date']->date->diff('now');
-//        }
+        foreach ($this->creditTrack['debit'] as $d){
+            $paidOut[$counter]['loanTime'] = $d['date']->diff(new DateTime('now'));
+            $paidOut[$counter]['amount'] = $d['value'];
+            $paidOut[$counter]['date'] = $d['date'];
+            $counter++;
+        }
 
-        $this->creditBill = $this->creditTrack['debit'];
+        $this->creditBill = $paidOut;
     }
 
 
