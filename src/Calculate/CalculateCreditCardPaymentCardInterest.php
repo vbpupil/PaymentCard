@@ -1,9 +1,7 @@
 <?php
 /**
- * Freetimers Shortcode Class
- *
  * @author    Dean Haines
- * @copyright Freetimers Communications Ltd, 2018, UK
+ * @copyright Dean Haines, 2018, UK
  * @license   Proprietary See LICENSE.md
  */
 
@@ -11,9 +9,9 @@ namespace vbpupil\Calculate;
 
 
 use DateTime;
-use Vbpupil\Calculate\InterestInterface;
+use Vbpupil\Calculate\PaymentCardInterestInterface;
 
-class CalculateCreditCardInterest implements InterestInterface
+class CalculateCreditCardPaymentCardInterest implements PaymentCardInterestInterface
 {
 
     protected $totalInterestChargedForTheMonth = 0;

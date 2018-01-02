@@ -14,8 +14,8 @@ use Chippyash\Type\Number\FloatType;
 use Chippyash\Type\String\StringType;
 use DateTime;
 use vbpupil\Audit\Audit;
-use Vbpupil\Calculate\CalculateCreditCardInterest;
-use vbpupil\Calculate\InterestInterface;
+use Vbpupil\Calculate\CalculateCreditCardPaymentCardInterest;
+use vbpupil\Calculate\PaymentCardInterestInterface;
 
 /**
  * Class CreditCard
@@ -120,7 +120,7 @@ class CreditCard extends PaymentCard
     /**
      *
      */
-    public function calculateInterest(InterestInterface $interest)
+    public function calculateInterest(PaymentCardInterestInterface $interest)
     {
         $this->creditBill = $interest->calculate($this->creditTrack['credit'], $this->creditTrack['debit'], $this->getApr());
         $this->totalInterestChargedForTheMonth = $this->creditBill['totalInterestChargedForTheMonth'];

@@ -2,7 +2,7 @@
 
 use Chippyash\Type\Number\FloatType;
 use Chippyash\Type\String\StringType;
-use Vbpupil\Calculate\CalculateCreditCardInterest;
+use Vbpupil\Calculate\CalculateCreditCardPaymentCardInterest;
 use Vbpupil\Card\CardType;
 use Vbpupil\Card\CreditCard;
 
@@ -24,6 +24,6 @@ $card
 ->debitAccount(new FloatType(80.00), new DateTime('2017-04-24'))
 ->debitAccount(new FloatType(200.00), new DateTime('now'))
 
-->calculateInterest( new CalculateCreditCardInterest());
+->calculateInterest( new CalculateCreditCardPaymentCardInterest());
 
 dump($card);
