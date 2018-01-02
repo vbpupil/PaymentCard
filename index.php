@@ -3,6 +3,7 @@
 use Chippyash\Type\Number\FloatType;
 use Chippyash\Type\String\StringType;
 use Vbpupil\Audit\Audit;
+use Vbpupil\Calculate\CalculateCreditCardInterest;
 use Vbpupil\Card\CardType;
 use Vbpupil\Card\CreditCard;
 use Vbpupil\Card\DebitCard;
@@ -25,11 +26,11 @@ $card
 ->creditAccount(new FloatType(10.00), new DateTime('now'))
 ->creditAccount(new FloatType(15.00), new DateTime('now'))
 
-->debitAccount(new FloatType(10.00), new DateTime('2017-09-02'))
-->debitAccount(new FloatType(80.00), new DateTime('2016-08-24'))
-->debitAccount(new FloatType(1.00), new DateTime('now'))
+->debitAccount(new FloatType(500.00), new DateTime('2017-09-02'))
+->debitAccount(new FloatType(80.00), new DateTime('2017-04-24'))
+->debitAccount(new FloatType(200.00), new DateTime('now'))
 
-->calculateInterest();
+->calculateInterest( new CalculateCreditCardInterest());
 
 dump($card);
 

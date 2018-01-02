@@ -14,6 +14,8 @@ use Chippyash\Type\Number\FloatType;
 use Chippyash\Type\String\StringType;
 use DateTime;
 use vbpupil\Audit\Audit;
+use Vbpupil\Calculate\CalculateCreditCardInterest;
+use vbpupil\Calculate\InterestInterface;
 
 /**
  * Class CreditCard
@@ -41,7 +43,15 @@ class CreditCard extends PaymentCard
      */
     protected $apr;
 
+    /**
+     * @var
+     */
     protected $creditBill;
+
+    /**
+     * @var int
+     */
+    protected $totalInterestChargedForTheMonth = 0;
 
     /**
      * CreditCard constructor.
@@ -50,7 +60,7 @@ class CreditCard extends PaymentCard
     {
         parent::__construct();
         $this->setCreditLimit(new FloatType(1000.00));
-        $this->setApr(new FloatType(20.00));
+        $this->setApr(new FloatType(20));
         $this->setCardCharge(new FloatType(0));
     }
 
@@ -110,42 +120,13 @@ class CreditCard extends PaymentCard
     /**
      *
      */
-    public function calculateInterest()
+    public function calculateInterest(InterestInterface $interest)
     {
-        $this->calculate();
+        $this->creditBill = $interest->calculate($this->creditTrack['credit'], $this->creditTrack['debit'], $this->getApr());
+        $this->totalInterestChargedForTheMonth = $this->creditBill['totalInterestChargedForTheMonth'];
+
+//        $this->setBalance(new FloatType( ($this->balance->get() - $this->totalInterestChargedForTheMonth) ));
     }
-
-    private function calculate()
-    {
-        $paidIn = 0;
-        $paidOut = array();
-        $counter = 0;
-
-        //GET A TOTAL FOR WHATS BEEN PAID IN
-        foreach ($this->creditTrack['credit'] AS $d) {
-            $paidIn += $d['value'];
-        }
-
-        //SORT DEBIT INTO DATE ORDER
-        usort($this->creditTrack['debit'],function($a, $b){
-            if ($a['date']->date == $b['date']->date) {
-                return 0;
-            }
-            return ($a['date']->date < $b['date']->date) ? -1 : 1 ;
-
-        });
-
-
-        foreach ($this->creditTrack['debit'] as $d){
-            $paidOut[$counter]['loanTime'] = $d['date']->diff(new DateTime('now'));
-            $paidOut[$counter]['amount'] = $d['value'];
-            $paidOut[$counter]['date'] = $d['date'];
-            $counter++;
-        }
-
-        $this->creditBill = $paidOut;
-    }
-
 
     /**
      * @return mixed
@@ -169,12 +150,12 @@ class CreditCard extends PaymentCard
     }
 
     /**
-     * @return int
+     * @return float
      */
     public
     function getApr()
     {
-        return $this->apr;
+        return $this->apr->get();
     }
 
     /**
