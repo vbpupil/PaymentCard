@@ -1,6 +1,6 @@
 {
     "name": "vbpupil/payment-card",
-    "description": "Payment Card, supports credit, debit & gift cards",
+    "description": "A PaymentCard Object which supports card types such as Debit, Credit and Gift cards.",
     "license": "GPL 3.0",
     "keywords": [
         "credit",
