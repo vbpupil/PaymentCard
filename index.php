@@ -13,7 +13,7 @@ $card = new CreditCard();
 $card
 ->setCardName(new StringType('Shop Gift Card'))
 ->setCardType(new CardType('credit'))
-->setOwner(new StringType('Mr D Haines'))
+->setOwner(new StringType('Mr D Schwartz'))
 ->setValidDate(new DateTime('1/12/17', new DateTimeZone('Europe/London')))
 ->setExpDate(new DateTime('01/12/18', new DateTimeZone('Europe/London')))
 
