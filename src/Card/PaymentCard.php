@@ -66,6 +66,8 @@ class PaymentCard extends CardType
         if(!is_a($this->balance,'FloatType') ) {
             $this->setBalance(new FloatType(0.00));
         }
+
+        return $this;
     }
 
     /**
@@ -249,5 +251,10 @@ class PaymentCard extends CardType
     public function getAudit()
     {
         return $this->audit;
+    }
+
+    public function getLastAuditItem()
+    {
+        return end($this->audit);
     }
 }

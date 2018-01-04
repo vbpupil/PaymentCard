@@ -8,6 +8,7 @@
 namespace vbpupil\Calculate;
 
 
+use Chippyash\Type\Number\FloatType;
 use DateTime;
 use Vbpupil\Calculate\PaymentCardInterestInterface;
 
@@ -16,11 +17,31 @@ class CalculateCreditCardInterest implements PaymentCardInterestInterface
 
     protected $totalInterestChargedForTheMonth = 0;
 
+    protected $apr;
+
+    public function __construct()
+    {
+        $this->setApr(new FloatType(11.5));
+    }
+
+    /**
+     * @param FloatType $apr
+     */
+    public
+    function setApr(FloatType $apr)
+    {
+        $this->apr = $apr;
+        return $this;
+    }
+
     public function calculate($credit, $debit, $apr)
     {
         $paidIn = 0;
         $paidOut = array();
         $counter = 0;
+        $daysInThisMonth = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+        $daysInThisYear = date("z", mktime(0,0,0,12,31,date('Y'))) + 1;
+        $this->setApr(new FloatType($apr));
 
         //GET A TOTAL FOR WHATS BEEN PAID IN
         foreach ($credit AS $d) {
@@ -47,10 +68,10 @@ class CalculateCreditCardInterest implements PaymentCardInterestInterface
             }
 
             //(AMOUNT BORROWED * NUMBER OF DAYS BORROWED FOR) / BY THE MONTH
-            $paidOut[$counter]['dailyBalance'] = ($paidOut[$counter]['amount'] * $paidOut[$counter]['loanTime']->days) / 30;
+            $paidOut[$counter]['dailyBalance'] = ($paidOut[$counter]['amount'] * $paidOut[$counter]['loanTime']->days) / $daysInThisMonth;
 
             //TOTAL AMOUNT YOU WILL BE CHARGED FOR BORROWING
-            $paidOut[$counter]['interestCharged'] = number_format(($paidOut[$counter]['dailyBalance'] * (($apr / 365) / 100) * 30), 2, '.', '');
+            $paidOut[$counter]['interestCharged'] = number_format(($paidOut[$counter]['dailyBalance'] * (($this->getApr() / $daysInThisYear) / 100) * $daysInThisMonth), 2, '.', '');
 
             $this->totalInterestChargedForTheMonth += $paidOut[$counter]['interestCharged'];
 
@@ -60,6 +81,15 @@ class CalculateCreditCardInterest implements PaymentCardInterestInterface
         $paidOut['totalInterestChargedForTheMonth'] = $this->totalInterestChargedForTheMonth;
 
         return $paidOut;
+    }
+
+    /**
+     * @return float
+     */
+    public
+    function getApr()
+    {
+        return $this->apr->get();
     }
 
 }
